@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 
 const server = express(); 
-const port = 3000;
+const port = 3000 || 3001 || 3002;
 
 server.use(express.json());
 
