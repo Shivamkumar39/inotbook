@@ -13,17 +13,17 @@ server.post('/createUser', [
     body('email', 'Enter a valid email').isEmail(),
     body('password', 'Password must be at least 5 characters long').isLength({ min: 5 })
 ], async (req, res) => {
-
+    let success = false
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        return res.status(400).json({success, errors: errors.array() });
     }
 
     try {
         let user = await User.findOne({ email: req.body.email });
 
         if (user) {
-            return res.status(400).json({ error: "Sorry, a user with this email already exists" });
+            return res.status(400).json({success, error: "Sorry, a user with this email already exists" });
         }
 
         const salt = await bcrypt.genSalt(5);
@@ -42,11 +42,11 @@ server.post('/createUser', [
         }
 
 
-        const access_token = jwt.sign(data, jwt_secret)
-        res.json({ access_token })
-
-
-        res.json(user);
+        const authtoken = jwt.sign(data, jwt_secret)
+        success = true
+        res.json({ success,
+            authtoken
+        });
 
     } catch (err) {
         console.error(err.message);
@@ -64,19 +64,21 @@ server.post('/login', [
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
-
+    let success = false
     const { email, password } = req.body
 
     try {
 
         let user = await User.findOne({ email })
         if (!user) {
-            return res.status(400).json({ error: "please try to login correct data" })
+            success = false
+            return res.status(400).json({success, error: "please try to login correct data" })
         }
 
         const passwordCompasre = await bcrypt.compare(password, user.password)
         if (!passwordCompasre) {
-            return res.status(400).json({ error: "please try to login correct password" })
+            success = false
+            return res.status(400).json({success, error: "please try to login correct password" })
 
         }
 
@@ -87,8 +89,9 @@ server.post('/login', [
         }
 
 
-        const access_token = jwt.sign(data, jwt_secret)
-        res.json({ access_token })
+        const authtoken  = jwt.sign(data, jwt_secret)
+        success = true
+        res.json({success, authtoken })
 
     }
     catch (err) {
@@ -102,14 +105,14 @@ server.post('/login', [
 //get user backend to frontend
 
 
-server.post('/getuser',fetchuser, async (req, res) => {
+server.get('/getuser',fetchuser, async (req, res) => {
 
 
 
     try {
 
-         userId = req.user.id
-         const user = await User.findById(userId).select('-password')
+         user = req.user.id
+         const user = await User.findById(user).select('-password')
       
          console.log(user);
          res.send(user)

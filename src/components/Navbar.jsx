@@ -1,11 +1,18 @@
-import React, { useEffect }  from 'react'
+import React, { useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-
+import { useNavigate } from 'react-router-dom';
+import logimg from '../img/logo.jpeg'
 const Navbar = () => {
+  const navigate = useNavigate();
   let location = useLocation()
-  useEffect(() =>{
-    console.log(['pageview', location.pathname])
-  }, [location])
+  // useEffect(() =>{
+  //   console.log(['pageview', location.pathname])
+  // }, [location])
+
+  const HandleLogOut = ()=>{
+    localStorage.removeItem('token')
+    navigate('/Login')
+  }
 
   return (
 
@@ -18,7 +25,7 @@ const Navbar = () => {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0 text">
             <li className="nav-item">
-              <Link className={`nav-link fw-bold ${location.pathname === '/home' ? "active" : ""}`}  aria-current="page" to="/">Home</Link>
+              <Link className={`nav-link fw-bold ${location.pathname === '/home' ? "active" : ""}`} aria-current="page" to="/">Home</Link>
             </li>
             <li className="nav-item">
               <Link className={`nav-link fw-bold  ${location.pathname === '/about' ? "active text-success" : ""}`} to='/about'>About</Link>
@@ -38,12 +45,20 @@ const Navbar = () => {
           <a className="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
         </li> */}
           </ul>
-          <form className="d-flex">
+          {!localStorage.getItem('token') ? <form className="d-flex">
             <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
             <button className="btn btn-outline-success m-1" type="submit">Search</button>
-            <button className="btn btn-outline-success m-1" type="submit">Login</button>
-            <button className="btn btn-outline-success m-1" type="submit">Signup</button>
-          </form>
+            <Link to='/Login' className="btn btn-outline-success m-1" type="submit">Login</Link>
+            <Link to='/Signup' className="btn btn-outline-success m-1" type="submit">Signup</Link>
+          </form> :
+             <div>
+              <Link to='/Profile'>
+              <img src={logimg} className= 'img' style={{"width":"3rem", "height":"3rem", "border-radius":"50%"}}  />
+              </Link>
+              <button onClick={HandleLogOut} className="btn btn-outline-success m-1" type="submit">Logout</button>
+             </div>
+            
+          }
         </div>
       </div>
     </nav>
