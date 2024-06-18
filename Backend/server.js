@@ -12,7 +12,7 @@ server.use(cors())
 server.use(express.json());
 
 //mongo connect code
-mongoose.connect("mongodb://localhost:27017/mongoose", {
+mongoose.connect("mongodb://localhost:27017/mongoose", {  // mongodb+srv://shivamkumar098798:dYAPQ3FWQydd1JSX@cluster0.dfquciy.mongodb.net/
     
 }).then(() => {
   console.log("MongoDB is connected");
