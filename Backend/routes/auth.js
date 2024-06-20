@@ -111,18 +111,39 @@ server.get('/getuser',fetchuser, async (req, res) => {
 
     try {
 
-         user = req.user.id
-         const user = await User.findById(user).select('-password')
-      
-         console.log(user);
-         res.send(user)
+        const userId = req.user.id;
+        const user = await User.findById(userId).select('name email date bio -_id');
+        if (!user) {
+          return res.status(404).send("User not found");
+        }
+        res.json(user);
 
 
     } catch (error) {
-        console.error(err.message);
+        console.error(error.message);
         res.status(500).send("Internal Server Error");
     }
 
 })
+
+
+server.post('/updatebio', fetchuser, async (req, res) => {
+    const { bio } = req.body;
+  
+    try {
+      const userId = req.user.id;
+      const user = await User.findByIdAndUpdate(userId, { bio }, { new: true });
+
+      console.log(bio);
+      if (!user) {
+        return res.status(404).send('User not found');
+      }
+  
+      res.json(user);
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).send('Internal Server Error');
+    }
+  });
 
 module.exports = server;

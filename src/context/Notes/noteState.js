@@ -1,8 +1,8 @@
 import NoteContext from "./noteContext";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const NoteState = (props) => {
-  const host = "http://localhost:3020"
+  const host = "http://localhost:3060"
   const notesInitial = []
   const [notes, setNotes] = useState(notesInitial)
 
@@ -48,6 +48,7 @@ const NoteState = (props) => {
       }
     });
     const json = response.json();
+    console.log(json);
     const newNotes = notes.filter((note) => { return note._id !== id })
     setNotes(newNotes)
   }
@@ -64,7 +65,7 @@ const NoteState = (props) => {
       body: JSON.stringify({ title, description, tag })
     });
     const json = await response.json();
-
+    console.log(json);
     let newNotes = JSON.parse(JSON.stringify(notes))
     // Logic to edit in client
     for (let index = 0; index < newNotes.length; index++) {

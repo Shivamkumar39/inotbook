@@ -11,7 +11,7 @@ const Signup = (props) => {
        try {
         
         const { name, email, password} =  Credential
-        const response = await fetch('http://localhost:3020/api/auth/createUser', {
+        const response = await fetch('http://localhost:3060/api/auth/createUser', {
              method: 'POST',
              headers: {
                  'Content-Type': 'application/json'                
@@ -52,7 +52,7 @@ const Signup = (props) => {
             </div>
             <div className="mb-3">
                 <label htmlFor="password" className="form-label">Password</label>
-                <input type="password" className="form-control" id="password" name='password' minlength="5" required  onChange={onChange} />
+                <input type="password" className="form-control" id="password" name='password' minLength="5" required  onChange={onChange} />
             </div>
             <button type="submit" className="btn btn-primary" >Submit</button>
         </form>
